@@ -14,21 +14,42 @@ import com.samet.bankmanagement.repository.CustomerRepository;
 @Service
 public class CustomerService {
 
-	private final CustomerRepository customerRepostitory;
+	private final CustomerRepository customerRepository;
 	
 	public CustomerService(CustomerRepository customerRepostitory) {
-		this.customerRepostitory = customerRepostitory;
+		this.customerRepository = customerRepostitory;
 	}
 	
 	public List<Customer> getAllCustomers(){
-		return customerRepostitory.findAll();
+		return customerRepository.findAll();
 	} 
 	
 	public Customer createCustomer(Customer customer) {
-		return customerRepostitory.save(customer);
+		return customerRepository.save(customer);
 	}
 	
 	public Customer getCustomerById(Long id) {
-		return customerRepostitory.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Bu id'ye sahip müsteri yok : " +id));
+		return customerRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Bu id'ye sahip müsteri yok : " +id));
 	}
+	
+	public Customer updateCustomer(Long id, Customer updateCustomer) { // Customer updateCustomer --> Güncelleyecek olan customer'ı alıyoruz.(Buradaki değerleri)
+		
+		// Customer existingCustomer --> Zaten var olan güncelleyeceğimiz mevcut customer
+		Customer existingCustomer = getCustomerById(id);	// Güncellenecek olan customer'ın id sini alıyoruz. var mı yok mu kontrolü.
+		
+		existingCustomer.setFirstName(updateCustomer.getFirstName());
+		existingCustomer.setLastName(updateCustomer.getLastName());
+		existingCustomer.setEmail(updateCustomer.getEmail());
+		
+		return customerRepository.save(existingCustomer);
+	}
+	
+	public void deleteCustomer(Long id) {
+		
+		Customer existingCustomer = getCustomerById(id);	// Müşteri var mı yok mu id ile kontrolü.
+		
+		customerRepository.delete(existingCustomer);
+	}
+	
+	
 }
