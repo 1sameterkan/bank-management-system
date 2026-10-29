@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.samet.bankmanagement.entity.Customer;
 import com.samet.bankmanagement.service.CustomerService;
 
+import jakarta.validation.Valid;
+
 /*
 Şu an CustomerService sınıfımız müşterileri listeleyebiliyor ve müşteri kaydedebiliyor. 
 Ancak bu metotları henüz tarayıcıdan veya Postman üzerinden çağırabileceğimiz bir adresimiz yok.
@@ -36,7 +38,7 @@ public class CustomerController {
 	}
 	
 	@PostMapping
-	public Customer createCustomers(@RequestBody Customer customer) {
+	public Customer createCustomers(@Valid @RequestBody Customer customer) {	// Controller'da @Valid kullanarak gelen JSON'un doğrulanmasını isteriz. Bu da Customer' da olur. 
 		return customerService.createCustomer(customer);
 	}
 	
@@ -46,7 +48,7 @@ public class CustomerController {
 	}
 	
 	@PutMapping("/{id}")
-	public Customer updateCustomer(@PathVariable Long id, @RequestBody Customer updatedCustomer) {
+	public Customer updateCustomer(@PathVariable Long id, @Valid @RequestBody Customer updatedCustomer) {
 		return customerService.updateCustomer(id, updatedCustomer);
 	}
 	
